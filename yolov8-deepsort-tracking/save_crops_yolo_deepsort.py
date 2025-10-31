@@ -9,6 +9,18 @@ from ultralytics import YOLO
 
 import deep_sort.deep_sort.deep_sort as ds
 
+
+
+def run_from_paths(input_path, output_path, camera_id=1, sequence_id=1):
+    # 这里复用你已有代码：创建 model, tracker 的那段
+    model = YOLO("yolov8n.pt")
+    tracker = ds.DeepSort("yolov8-deepsort-tracking/deep_sort/deep_sort/deep/checkpoint/ckpt.t7")
+    detect_class = 0
+    detect_and_track(input_path, output_path, detect_class, model, tracker,
+                     camera_id=camera_id, sequence_id=sequence_id,
+                     save_crops=True, label_map_path=str(Path(output_path)/f"label_map_c{camera_id}s{sequence_id}.json"))
+
+
 def putTextWithBackground(img, text, origin, font=cv2.FONT_HERSHEY_SIMPLEX, font_scale=1, text_color=(255, 255, 255), bg_color=(0, 0, 0), thickness=1):
     """绘制带有背景的文本。"""
     (text_width, text_height), _ = cv2.getTextSize(text, font, font_scale, thickness)
@@ -212,7 +224,7 @@ if __name__ == "__main__":
     input_path = r"D:\code\python\Reid\yolov8-deepsort-tracking\VID20250906201700(3).mp4"
     output_path = r"D:\code\python\Reid\yolov8-deepsort-tracking\output"
     yolo_weights = "yolov8n.pt"  # 或你训练的权重
-    deep_sort_ckpt = "deep_sort/deep_sort/deep/checkpoint/ckpt.t7"  # 保持你原来的路径
+    deep_sort_ckpt = r"D:\code\python\Reid\yolov8-deepsort-tracking\deep_sort\deep_sort\deep\checkpoint\ckpt.t7"  # 保持你原来的路径
     camera_id = 1   # 设置为当前摄像头编号（1..6）
     sequence_id = 1 # 设置为当前录像段编号（1..N）
     label_map_json = str(Path(output_path) / "label_map_c1s1.json")  # 可选：保存track->label映射
